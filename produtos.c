@@ -1,8 +1,9 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include <string.h>
 typedef struct
 {
-    char nome[60];
+    char nome[61];
     int codigo;
     int quantidade_estoque;
     int preco;
@@ -98,48 +99,52 @@ int main(int argc, char const *argv[])
     int op1;
     t_lista *lista = criarLista(100); 
     do
-	{
-		printf("\nDigite 1 para cadastrar um produto\n");
-		printf("\nDigite 2 remover um produto\n");
-		printf("\nDigite 3 para atualizar um produto\n");
-		printf("\nDigite 4 para consultar informações de um produto\n");
-		scanf("%d",&op1);
-		fflush(stdin);
-		
-		switch(op1)
-		{
-			case 1:
-			    
-				produto novoProduto;
+    {
+        printf("\nDigite 1 para cadastrar um produto\n");
+        printf("\nDigite 2 para remover um produto\n");
+        printf("\nDigite 3 para atualizar um produto\n");
+        printf("\nDigite 4 para consultar informações de um produto\n");
+        printf("\nDigite 0 para sair\n");
+        scanf("%d", &op1);
+       
+        switch(op1)
+        {
+            case 1:
+                produto novoProduto;
+                
+                
                 printf("Digite o nome do produto: ");
-                scanf("%s", novoProduto.nome);
-                fflush(stdin);
+                getchar();
+                fgets(novoProduto.nome,50,stdin);
+                
+                
                 printf("Digite o código do produto: ");
                 scanf("%d", &novoProduto.codigo);
-                fflush(stdin);
+                getchar();
+                
                 printf("Digite a quantidade em estoque: ");
                 scanf("%d", &novoProduto.quantidade_estoque);
-                fflush(stdin);
+                getchar();
+                
                 printf("Digite o preço do produto: ");
                 scanf("%d", &novoProduto.preco);
-                fflush(stdin);
+                getchar();
                 
-
                 if (inserirProduto(lista, novoProduto)) {
                     printf("Produto cadastrado com sucesso!\n");
                 } else {
                     printf("A lista está cheia. Não foi possível cadastrar o produto.\n");
                 }
                 break;
-			case 2:
-			    int cod;
-			    printf("Digite o código do produto:");
-			    scanf("%d",&cod);
-			    removerProduto(lista,cod);
-			    break;
-			case 0:
-				break;
-			default: printf("Opção Inválida!\n");
-		}
-	}while(op1 >= 1 && op1 <=2);
+            case 2:
+                int cod;
+                printf("Digite o código do produto:");
+                scanf("%d",&cod);
+                removerProduto(lista,cod);
+                break;
+            case 0:
+                break;
+        }
+    }while(op1 >= 1 && op1 <= 2);
+    
 }
