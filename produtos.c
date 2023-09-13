@@ -6,7 +6,7 @@ typedef struct
     char nome[61];
     int codigo;
     int quantidade_estoque;
-    int preco;
+    float preco;
 }produto;
 
 typedef struct {
@@ -92,18 +92,87 @@ int removerProduto(t_lista *lista, int codigo) {
     }
 }
 
+void listarProdutos(t_lista *lista)
+{
+    if(!vazia(lista))
+    {
+        for(int i=0; i < lista->n;i++)
+        {
+            printf("Nome:%sCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
+            printf("\n");
+        }
+    }
+    else
+    {
+        printf("\nA lista de produtos está vazia!");
+    }
+}
+
+void listarProduto(t_lista *lista, int codigo)
+{
+    int indice = 0;
+    if(!vazia(lista))
+    {
+        for(int i=0; i < lista->n;i++)
+        {
+            if(lista->itens[i].codigo == codigo)
+            {
+                printf("Nome:%sCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
+            }
+            else
+            {
+                indice = 1;
+            }   
+        }
+        if(indice)
+        {
+            printf("\nNão foi encontrado nenhum produto com esse código!\n");
+        }
+
+    }
+    else
+    {
+        printf("\nA lista de produtos está vazia!");
+    }
+}
+
+int atualizarProduto(t_lista *lista, int codigo)
+{
+    
+}
+
+
+int encontrarProduto(t_lista *lista, int codigo)
+{
+    if(!vazia(lista))
+    {
+        for(int i=0; i < lista->n;i++)
+        {
+            if(lista->itens[i].codigo == codigo)
+            {
+                return 1;
+            }   
+        }
+        return 0;
+    }
+    else
+    {
+        printf("\nA lista de produtos está vazia!");
+    }
+}
 
 
 int main(int argc, char const *argv[])
 {
-    int op1;
+    int op1,cod;
     t_lista *lista = criarLista(100); 
     do
     {
         printf("\nDigite 1 para cadastrar um produto\n");
         printf("\nDigite 2 para remover um produto\n");
-        printf("\nDigite 3 para atualizar um produto\n");
-        printf("\nDigite 4 para consultar informações de um produto\n");
+        printf("\nDigite 3 para listar os produtos\n");
+        printf("\nDigite 4 para consultar informações de um produto!\n");
+        printf("\nDigite 5 para atualizar um produto\n");
         printf("\nDigite 0 para sair\n");
         scanf("%d", &op1);
        
@@ -127,7 +196,7 @@ int main(int argc, char const *argv[])
                 getchar();
                 
                 printf("Digite o preço do produto: ");
-                scanf("%d", &novoProduto.preco);
+                scanf("%f", &novoProduto.preco);
                 getchar();
                 
                 if (inserirProduto(lista, novoProduto)) {
@@ -137,14 +206,34 @@ int main(int argc, char const *argv[])
                 }
                 break;
             case 2:
-                int cod;
                 printf("Digite o código do produto:");
                 scanf("%d",&cod);
                 removerProduto(lista,cod);
                 break;
+            case 3:
+                listarProdutos(lista);
+                break;
+            case 4:
+                printf("\nDigite o código para listar um produto:");
+                scanf("%d",&cod);
+                listarProduto(lista,cod);
+                break;
+            case 5:
+                printf("\nDigite o codigo do produto que deseja atualizar:");
+                scanf("%d",&cod);
+                if(encontrarProduto(lista,cod))
+                {
+
+                }
+                else
+                {
+                    printf("\nNão foi encontrado nenhum produto com esse código!");
+                }
+
+                break;
             case 0:
                 break;
         }
-    }while(op1 >= 1 && op1 <= 2);
+    }while(op1 != 0);
     
 }
