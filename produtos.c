@@ -65,6 +65,33 @@ int inserirProduto(t_lista *lista, produto p) {
     return 0;
 }
 
+int removerProduto(t_lista *lista, int codigo) {
+    if (!vazia(lista)) {
+        int indice = -1; 
+        
+        for (int i = 0; i < lista->n; i++) {
+            if (lista->itens[i].codigo == codigo) {
+                indice = i; 
+                break;
+            }
+        }
+        
+        if (indice != -1) { 
+            
+            for (int i = indice; i < lista->n - 1; i++) {
+                lista->itens[i] = lista->itens[i + 1];
+            }
+            lista->n--; 
+            printf("Produto com código %d removido com sucesso!.\n", codigo);
+        } else {
+            printf("Produto com código %d não encontrado na lista.\n", codigo);
+        }
+    } else {
+        printf("A lista está vazia. Não é possível remover produtos.\n");
+    }
+}
+
+
 
 int main(int argc, char const *argv[])
 {
@@ -73,23 +100,30 @@ int main(int argc, char const *argv[])
     do
 	{
 		printf("\nDigite 1 para cadastrar um produto\n");
-		
+		printf("\nDigite 2 remover um produto\n");
+		printf("\nDigite 3 para atualizar um produto\n");
+		printf("\nDigite 4 para consultar informações de um produto\n");
 		scanf("%d",&op1);
 		fflush(stdin);
 		
 		switch(op1)
 		{
 			case 1:
-			
+			    
 				produto novoProduto;
                 printf("Digite o nome do produto: ");
                 scanf("%s", novoProduto.nome);
+                fflush(stdin);
                 printf("Digite o código do produto: ");
                 scanf("%d", &novoProduto.codigo);
+                fflush(stdin);
                 printf("Digite a quantidade em estoque: ");
                 scanf("%d", &novoProduto.quantidade_estoque);
+                fflush(stdin);
                 printf("Digite o preço do produto: ");
                 scanf("%d", &novoProduto.preco);
+                fflush(stdin);
+                
 
                 if (inserirProduto(lista, novoProduto)) {
                     printf("Produto cadastrado com sucesso!\n");
@@ -97,7 +131,12 @@ int main(int argc, char const *argv[])
                     printf("A lista está cheia. Não foi possível cadastrar o produto.\n");
                 }
                 break;
-			
+			case 2:
+			    int cod;
+			    printf("Digite o código do produto:");
+			    scanf("%d",&cod);
+			    removerProduto(lista,cod);
+			    break;
 			case 0:
 				break;
 			default: printf("Opção Inválida!\n");
