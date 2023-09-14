@@ -98,7 +98,7 @@ void listarProdutos(t_lista *lista)
     {
         for(int i=0; i < lista->n;i++)
         {
-            printf("Nome:%sCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
+            printf("Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
             printf("\n");
         }
     }
@@ -136,8 +136,20 @@ void listarProduto(t_lista *lista, int codigo)
     }
 }
 
-int atualizarProduto(t_lista *lista, int codigo)
+int atualizarProduto(t_lista *lista,int indice)
 {
+    
+    printf("\nDigite o novo nome para o produto:");
+    scanf(" %s",lista->itens[indice].nome);
+    
+    printf("\nDigite a nova quantidade para o estoque:");
+    scanf("%d",&lista->itens[indice].quantidade_estoque);
+   
+    printf("\nDigite o novo preço para o produto:");
+    scanf("%f",&lista->itens[indice].preco);
+   
+
+    printf("\nO produto foi atualizado com sucesso!");
     
 }
 
@@ -150,21 +162,21 @@ int encontrarProduto(t_lista *lista, int codigo)
         {
             if(lista->itens[i].codigo == codigo)
             {
-                return 1;
+                return i;
             }   
         }
-        return 0;
+        return -1;
     }
     else
     {
-        printf("\nA lista de produtos está vazia!");
+        printf("\nA lista de produtos está vazia!\n");
     }
 }
 
 
 int main(int argc, char const *argv[])
 {
-    int op1,cod;
+    int op1,cod,indice;
     t_lista *lista = criarLista(100); 
     do
     {
@@ -221,16 +233,20 @@ int main(int argc, char const *argv[])
             case 5:
                 printf("\nDigite o codigo do produto que deseja atualizar:");
                 scanf("%d",&cod);
-                if(encontrarProduto(lista,cod))
+                indice = encontrarProduto(lista,cod);
+                
+                
+                if(indice != -1)
                 {
-
+                    atualizarProduto(lista,indice);
+                    break;
                 }
                 else
                 {
                     printf("\nNão foi encontrado nenhum produto com esse código!");
+                    break;
                 }
-
-                break;
+                
             case 0:
                 break;
         }
