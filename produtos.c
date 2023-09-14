@@ -172,8 +172,55 @@ int encontrarProduto(t_lista *lista, int codigo)
         printf("\nA lista de produtos está vazia!\n");
     }
 }
-
-
+int encontrarCodigo(t_lista *lista, int codigo)
+{
+    for(int i=0; i < lista->n;i++)
+    {
+        if(lista->itens[i].codigo == codigo)
+        {
+            return i;
+        }   
+    }
+    return -1;
+}
+int ordernarQuantidade(t_lista *lista)
+{
+    int aux;
+    for(int i=0;i< lista->n;i++)
+    {
+        for(int x= i+1; x < lista->n;x++)
+        {
+            if(lista->itens[i].quantidade_estoque > lista->itens[x].quantidade_estoque)
+            {
+                aux = ;
+            }
+        }
+        
+    }
+}
+int submenu()
+{
+    int op2;
+    do
+    {
+        printf("\nDigite 1 para gerar um relatório de produtos ordenados pelo nome\n");
+        printf("\nDigite 2 para gerar um relatório de produtos ordenados pelo código\n");
+        printf("\nDigite 3 para gerar um relatório de produtos ordenados pela quantidade\n");
+        printf("\nDigite 4 para gerar um relatório de produtos ordenados pela preço\n");
+        printf("\nDigite 5 para gerar um relatório de produtos com estoque baixo\n");
+        printf("\nDigite 0 para voltar para o menu principal\n");
+        scanf("%d",&op2);
+        switch (op2)
+        {
+            case 1:
+                break;
+            
+            default:
+                break;
+        }
+    } while (op2 != 0);
+    
+}
 int main(int argc, char const *argv[])
 {
     int op1,cod,indice;
@@ -185,6 +232,7 @@ int main(int argc, char const *argv[])
         printf("\nDigite 3 para listar os produtos\n");
         printf("\nDigite 4 para consultar informações de um produto!\n");
         printf("\nDigite 5 para atualizar um produto\n");
+        printf("\nDigite 6 para acessar o submenu de relatórios\n");
         printf("\nDigite 0 para sair\n");
         scanf("%d", &op1);
        
@@ -210,13 +258,26 @@ int main(int argc, char const *argv[])
                 printf("Digite o preço do produto: ");
                 scanf("%f", &novoProduto.preco);
                 getchar();
-                
-                if (inserirProduto(lista, novoProduto)) {
-                    printf("Produto cadastrado com sucesso!\n");
-                } else {
-                    printf("A lista está cheia. Não foi possível cadastrar o produto.\n");
+               
+                if(encontrarCodigo(lista,novoProduto.codigo) != -1)
+                {
+                    printf("\nNão é possível cadastrar o mesmo produto no sistema!");
+                    break;
                 }
-                break;
+                else
+                {
+                    if (inserirProduto(lista, novoProduto)) 
+                    {
+                        printf("Produto cadastrado com sucesso!\n");
+                        break;
+                    } else 
+                    {
+                        printf("A lista está cheia. Não foi possível cadastrar o produto.\n");
+                        break;
+                    }
+                }
+                
+                
             case 2:
                 printf("Digite o código do produto:");
                 scanf("%d",&cod);
@@ -246,7 +307,9 @@ int main(int argc, char const *argv[])
                     printf("\nNão foi encontrado nenhum produto com esse código!");
                     break;
                 }
-                
+            case 6:
+                submenu();
+                break;
             case 0:
                 break;
         }
