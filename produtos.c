@@ -183,24 +183,84 @@ int encontrarCodigo(t_lista *lista, int codigo)
     }
     return -1;
 }
+
+t_lista* copiarLista(t_lista *listaOriginal) {
+    t_lista *novaLista = criarLista(listaOriginal->max);
+
+    for (int i = 0; i < listaOriginal->n; i++) {
+        inserirProduto(novaLista, listaOriginal->itens[i]);
+    }
+
+    return novaLista;
+}
+
+
 int ordernarQuantidade(t_lista *lista)
 {
+    t_lista *copiaLista = copiarLista(lista);
     int aux;
-    for(int i=0;i< lista->n;i++)
+    for(int i=0;i< copiaLista->n;i++)
     {
-        for(int x= i+1; x < lista->n;x++)
+        for(int x= i+1; x < copiaLista->n;x++)
         {
-            if(lista->itens[i].quantidade_estoque > lista->itens[x].quantidade_estoque)
+            if(copiaLista->itens[i].quantidade_estoque > copiaLista->itens[x].quantidade_estoque)
             {
-                aux = ;
+                aux = copiaLista->itens[i].quantidade_estoque;
+                copiaLista->itens[i].quantidade_estoque = copiaLista->itens[x].quantidade_estoque;
+                copiaLista->itens[x].quantidade_estoque = aux;
             }
         }
-        
     }
+    listarProdutos(copiaLista);
+
+    free(copiaLista->itens);
+    free(copiaLista);
 }
-int submenu()
+float ordernarPreco(t_lista *lista)
 {
-    int op2;
+    t_lista *copiaLista = copiarLista(lista);
+    int aux;
+    for(int i=0;i< copiaLista->n;i++)
+    {
+        for(int x= i+1; x < copiaLista->n;x++)
+        {
+            if(copiaLista->itens[i].preco > copiaLista->itens[x].preco)
+            {
+                aux = copiaLista->itens[i].preco;
+                copiaLista->itens[i].preco = copiaLista->itens[x].preco;
+                copiaLista->itens[x].preco = aux;
+            }
+        }
+    }
+    listarProdutos(copiaLista);
+
+    free(copiaLista->itens);
+    free(copiaLista);
+}
+int ordernarCodigo(t_lista *lista)
+{
+    t_lista *copiaLista = copiarLista(lista);
+    int aux;
+    for(int i=0;i< copiaLista->n;i++)
+    {
+        for(int x= i+1; x < copiaLista->n;x++)
+        {
+            if(copiaLista->itens[i].codigo > copiaLista->itens[x].codigo)
+            {
+                aux = copiaLista->itens[i].codigo;
+                copiaLista->itens[i].codigo = copiaLista->itens[x].codigo;
+                copiaLista->itens[x].codigo = aux;
+            }
+        }
+    }
+
+    listarProdutos(copiaLista);
+    free(copiaLista->itens);
+    free(copiaLista);
+}
+int submenu(t_lista *lista)
+{
+    int op2,estoque;
     do
     {
         printf("\nDigite 1 para gerar um relatório de produtos ordenados pelo nome\n");
@@ -213,6 +273,18 @@ int submenu()
         switch (op2)
         {
             case 1:
+                break;
+            case 2:
+                ordernarCodigo(lista);
+                break;
+            case 3:
+                ordernarQuantidade(lista);
+                break;
+            case 4:
+                ordernarPreco(lista);
+            case 5:
+                printf("\nDigite o valor de estoque que é considerado baixo:");
+                scanf("%d",&estoque);
                 break;
             
             default:
@@ -308,7 +380,7 @@ int main(int argc, char const *argv[])
                     break;
                 }
             case 6:
-                submenu();
+                submenu(lista);
                 break;
             case 0:
                 break;
