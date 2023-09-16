@@ -198,16 +198,16 @@ t_lista* copiarLista(t_lista *listaOriginal) {
 int ordernarQuantidade(t_lista *lista)
 {
     t_lista *copiaLista = copiarLista(lista);
-    int aux;
+    produto aux;
     for(int i=0;i< copiaLista->n;i++)
     {
         for(int x= i+1; x < copiaLista->n;x++)
         {
             if(copiaLista->itens[i].quantidade_estoque > copiaLista->itens[x].quantidade_estoque)
             {
-                aux = copiaLista->itens[i].quantidade_estoque;
-                copiaLista->itens[i].quantidade_estoque = copiaLista->itens[x].quantidade_estoque;
-                copiaLista->itens[x].quantidade_estoque = aux;
+                aux = copiaLista->itens[i];
+                copiaLista->itens[i] = copiaLista->itens[x];
+                copiaLista->itens[x] = aux;
             }
         }
     }
@@ -219,16 +219,16 @@ int ordernarQuantidade(t_lista *lista)
 float ordernarPreco(t_lista *lista)
 {
     t_lista *copiaLista = copiarLista(lista);
-    int aux;
+    produto aux;
     for(int i=0;i< copiaLista->n;i++)
     {
         for(int x= i+1; x < copiaLista->n;x++)
         {
             if(copiaLista->itens[i].preco > copiaLista->itens[x].preco)
             {
-                aux = copiaLista->itens[i].preco;
-                copiaLista->itens[i].preco = copiaLista->itens[x].preco;
-                copiaLista->itens[x].preco = aux;
+                aux = copiaLista->itens[i];
+                copiaLista->itens[i] = copiaLista->itens[x];
+                copiaLista->itens[x] = aux;
             }
         }
     }
@@ -240,16 +240,16 @@ float ordernarPreco(t_lista *lista)
 int ordernarCodigo(t_lista *lista)
 {
     t_lista *copiaLista = copiarLista(lista);
-    int aux;
+    produto aux;
     for(int i=0;i< copiaLista->n;i++)
     {
         for(int x= i+1; x < copiaLista->n;x++)
         {
             if(copiaLista->itens[i].codigo > copiaLista->itens[x].codigo)
             {
-                aux = copiaLista->itens[i].codigo;
-                copiaLista->itens[i].codigo = copiaLista->itens[x].codigo;
-                copiaLista->itens[x].codigo = aux;
+                aux = copiaLista->itens[i];
+                copiaLista->itens[i] = copiaLista->itens[x];
+                copiaLista->itens[x] = aux;
             }
         }
     }
@@ -258,6 +258,38 @@ int ordernarCodigo(t_lista *lista)
     free(copiaLista->itens);
     free(copiaLista);
 }
+void produtosEstoqueBaixo(t_lista *lista,int quantidade)
+{
+    for(int i=0;i< lista->n;i++)
+    {
+        if(lista->itens[i].quantidade_estoque < quantidade)
+        {
+            printf("Nome:%sCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
+        }
+    }
+    }
+void ordernarNome(t_lista *lista)
+{
+    t_lista *copiaLista = copiarLista(lista);
+    produto aux;
+    for(int i=0;i< copiaLista->n;i++)
+    {
+        for(int x= i+1; x < copiaLista->n;x++)
+        {
+            if(strcmp(copiaLista->itens[i].nome,copiaLista->itens[x].nome)>0)
+            {
+                aux = copiaLista->itens[i];
+                copiaLista->itens[i] = copiaLista->itens[x];
+                copiaLista->itens[x] = aux;
+            }
+        }
+    }
+    listarProdutos(copiaLista);
+
+    free(copiaLista->itens);
+    free(copiaLista);
+}
+
 int submenu(t_lista *lista)
 {
     int op2,estoque;
@@ -273,6 +305,7 @@ int submenu(t_lista *lista)
         switch (op2)
         {
             case 1:
+                ordernarNome(lista);
                 break;
             case 2:
                 ordernarCodigo(lista);
@@ -285,6 +318,7 @@ int submenu(t_lista *lista)
             case 5:
                 printf("\nDigite o valor de estoque que é considerado baixo:");
                 scanf("%d",&estoque);
+                produtosEstoqueBaixo(lista,estoque);
                 break;
             
             default:
@@ -293,6 +327,7 @@ int submenu(t_lista *lista)
     } while (op2 != 0);
     
 }
+
 int main(int argc, char const *argv[])
 {
     int op1,cod,indice;
