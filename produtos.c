@@ -93,7 +93,7 @@ int removerProduto(t_lista *lista, int codigo) {
     }
 }
 
-void listarProdutos(t_lista *lista)
+int listarProdutos(t_lista *lista)
 {
     if(!vazia(lista))
     {
@@ -105,11 +105,11 @@ void listarProdutos(t_lista *lista)
     }
     else
     {
-        printf("\nA lista de produtos está vazia!");
+        return 0;
     }
 }
 
-void listarProduto(t_lista *lista, int codigo)
+int listarProduto(t_lista *lista, int codigo)
 {
     int indice = 0;
     if(!vazia(lista))
@@ -127,13 +127,13 @@ void listarProduto(t_lista *lista, int codigo)
         }
         if(indice)
         {
-            printf("\nNão foi encontrado nenhum produto com esse código!\n");
+            return -1;
         }
 
     }
     else
     {
-        printf("\nA lista de produtos está vazia!");
+        return -1;
     }
 }
 
@@ -165,7 +165,7 @@ int encontrarProduto(t_lista *lista, int codigo)
     }
     else
     {
-        printf("\nA lista de produtos está vazia!\n");
+        return -1;
     }
 }
 int encontrarCodigo(t_lista *lista, int codigo)
@@ -463,6 +463,7 @@ int main(int argc, char const *argv[])
                 printf("\nDigite o código para listar um produto:");
                 scanf("%d",&cod);
                 listarProduto(lista,cod);
+                
                 break;
             case 5:
                 printf("\nDigite o codigo do produto que deseja atualizar:");
