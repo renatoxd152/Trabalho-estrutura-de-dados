@@ -1,0 +1,20 @@
+Nome:coca
+Código do produto:512
+Quantidade no estoque:131
+Preço do produto:15.00
+
+Nome:fanta
+Código do produto:123
+Quantidade no estoque:100
+Preço do produto:10.00
+
+Nome:fanta
+Código do produto:123
+Quantidade no estoque:100
+Preço do produto:10.00
+
+Nome:coca
+Código do produto:512
+Quantidade no estoque:100
+Preço do produto:12.00
+

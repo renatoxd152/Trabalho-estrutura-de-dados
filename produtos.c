@@ -19,7 +19,7 @@ t_lista* criarLista(int tam) {
     t_lista *lista = (t_lista *) malloc(sizeof(t_lista));
     lista->max = tam;
     lista->n = 0;
-    lista->itens = (int *) malloc(sizeof(int) * tam);
+    lista->itens = (produto *) malloc(sizeof(produto) * tam); 
     return lista;
 }
 
@@ -92,21 +92,26 @@ int removerProduto(t_lista *lista, int codigo) {
     }
 }
 
-void listarProdutos(t_lista *lista)
-{
-    if(!vazia(lista))
-    {
-        for(int i=0; i < lista->n;i++)
-        {
-            printf("Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
-            printf("\n");
-        }
+void listarProdutos() {
+    FILE *arquivo = fopen("C:\\Users\\Projeto 6\\Documents\\Trabalho-estrutura-de-dados\\produtos.txt", "r");
+
+    if (arquivo == NULL) {
+        perror("Erro ao abrir o arquivo");
+        return;
     }
-    else
-    {
-        printf("\nA lista de produtos está vazia!");
+
+    printf("Produtos no arquivo:\n\n");
+
+    produto p;
+    while (fscanf(arquivo, "Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%f\n",
+                   p.nome, &p.codigo, &p.quantidade_estoque, &p.preco) != EOF) {
+        printf("Nome: %s\nCódigo do produto: %d\nQuantidade no estoque: %d\nPreço do produto: %.2f\n\n",
+               p.nome, p.codigo, p.quantidade_estoque, p.preco);
     }
+
+    fclose(arquivo);
 }
+
 
 void listarProduto(t_lista *lista, int codigo)
 {
@@ -172,17 +177,31 @@ int encontrarProduto(t_lista *lista, int codigo)
         printf("\nA lista de produtos está vazia!\n");
     }
 }
-int encontrarCodigo(t_lista *lista, int codigo)
-{
-    for(int i=0; i < lista->n;i++)
-    {
-        if(lista->itens[i].codigo == codigo)
-        {
-            return i;
-        }   
+int encontrarCodigo(int codigo) {
+    FILE *arquivo = fopen("C:\\Users\\Projeto 6\\Documents\\Trabalho-estrutura-de-dados\\produtos.txt", "r");
+
+    if (arquivo == NULL) {
+        return -1;
     }
+
+    produto p;
+    int linha = 0;
+
+    while (fscanf(arquivo, "Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%f\n",
+                   p.nome, &p.codigo, &p.quantidade_estoque, &p.preco) != EOF) {
+        linha++;
+
+        if (p.codigo == codigo) {
+            fclose(arquivo); 
+            return linha; 
+        }
+    }
+
+    fclose(arquivo); 
+
     return -1;
 }
+
 
 t_lista* copiarLista(t_lista *listaOriginal) {
     t_lista *novaLista = criarLista(listaOriginal->max);
@@ -289,6 +308,26 @@ void ordernarNome(t_lista *lista)
     free(copiaLista->itens);
     free(copiaLista);
 }
+int salvarListaEmArquivo(t_lista *lista) {
+    FILE *arquivo = fopen("C:\\Users\\Projeto 6\\Documents\\Trabalho-estrutura-de-dados\\produtos.txt", "a");
+
+    if (arquivo == NULL) {
+        perror("Erro ao abrir o arquivo");
+        return 0;
+    }
+    else
+    {
+        for (int i = 0; i < lista->n; i++) {
+                fprintf(arquivo, "Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",
+                        lista->itens[i].nome, lista->itens[i].codigo, lista->itens[i].quantidade_estoque, lista->itens[i].preco);
+                fprintf(arquivo, "\n");
+            }
+
+            fclose(arquivo);
+            return 1;
+    } 
+}
+
 
 int submenu(t_lista *lista)
 {
@@ -332,6 +371,7 @@ int main(int argc, char const *argv[])
 {
     int op1,cod,indice;
     t_lista *lista = criarLista(100); 
+    produto novoProduto;
     do
     {
         printf("\nDigite 1 para cadastrar um produto\n");
@@ -346,13 +386,11 @@ int main(int argc, char const *argv[])
         switch(op1)
         {
             case 1:
-                produto novoProduto;
-                
-                
                 printf("Digite o nome do produto: ");
                 getchar();
                 fgets(novoProduto.nome,50,stdin);
-                
+                novoProduto.nome[strcspn(novoProduto.nome, "\n")] = '\0';
+
                 
                 printf("Digite o código do produto: ");
                 scanf("%d", &novoProduto.codigo);
@@ -366,7 +404,7 @@ int main(int argc, char const *argv[])
                 scanf("%f", &novoProduto.preco);
                 getchar();
                
-                if(encontrarCodigo(lista,novoProduto.codigo) != -1)
+                if(encontrarCodigo(novoProduto.codigo) != -1)
                 {
                     printf("\nNão é possível cadastrar o mesmo produto no sistema!");
                     break;
@@ -376,6 +414,11 @@ int main(int argc, char const *argv[])
                     if (inserirProduto(lista, novoProduto)) 
                     {
                         printf("Produto cadastrado com sucesso!\n");
+                        int retorno = salvarListaEmArquivo(lista);
+                        if(retorno == 1)
+                        {
+                            printf("\nOs dados foram gravados com sucesso!");
+                        }
                         break;
                     } else 
                     {
