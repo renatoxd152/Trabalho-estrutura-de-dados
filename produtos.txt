@@ -1,20 +1,10 @@
-Nome:coca
-Código do produto:512
-Quantidade no estoque:131
-Preço do produto:15.00
-
-Nome:fanta
+Nome:Coca-Cola
 Código do produto:123
-Quantidade no estoque:100
-Preço do produto:10.00
+Quantidade no estoque:150
+Preço do produto:5.50
 
-Nome:fanta
-Código do produto:123
-Quantidade no estoque:100
-Preço do produto:10.00
-
-Nome:coca
-Código do produto:512
-Quantidade no estoque:100
-Preço do produto:12.00
+Nome:Sprite
+Código do produto:15
+Quantidade no estoque:200
+Preço do produto:6.00
 

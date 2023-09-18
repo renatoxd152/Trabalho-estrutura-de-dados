@@ -83,35 +83,31 @@ int removerProduto(t_lista *lista, int codigo) {
                 lista->itens[i] = lista->itens[i + 1];
             }
             lista->n--; 
-            printf("Produto com código %d removido com sucesso!.\n", codigo);
+            
+            return 1;
         } else {
-            printf("Produto com código %d não encontrado na lista.\n", codigo);
+            return 0;
         }
     } else {
-        printf("A lista está vazia. Não é possível remover produtos.\n");
+        return 0;
     }
 }
 
-void listarProdutos() {
-    FILE *arquivo = fopen("C:\\Users\\Projeto 6\\Documents\\Trabalho-estrutura-de-dados\\produtos.txt", "r");
-
-    if (arquivo == NULL) {
-        perror("Erro ao abrir o arquivo");
-        return;
+void listarProdutos(t_lista *lista)
+{
+    if(!vazia(lista))
+    {
+        for(int i=0; i < lista->n;i++)
+        {
+            printf("Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
+            printf("\n");
+        }
     }
-
-    printf("Produtos no arquivo:\n\n");
-
-    produto p;
-    while (fscanf(arquivo, "Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%f\n",
-                   p.nome, &p.codigo, &p.quantidade_estoque, &p.preco) != EOF) {
-        printf("Nome: %s\nCódigo do produto: %d\nQuantidade no estoque: %d\nPreço do produto: %.2f\n\n",
-               p.nome, p.codigo, p.quantidade_estoque, p.preco);
+    else
+    {
+        printf("\nA lista de produtos está vazia!");
     }
-
-    fclose(arquivo);
 }
-
 
 void listarProduto(t_lista *lista, int codigo)
 {
@@ -122,7 +118,7 @@ void listarProduto(t_lista *lista, int codigo)
         {
             if(lista->itens[i].codigo == codigo)
             {
-                printf("Nome:%sCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
+                printf("Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
             }
             else
             {
@@ -141,20 +137,15 @@ void listarProduto(t_lista *lista, int codigo)
     }
 }
 
-int atualizarProduto(t_lista *lista,int indice)
+int atualizarProduto(t_lista *lista,int indice,produto *produto)
 {
+    strncpy(lista->itens[indice].nome, produto->nome, 61);
     
-    printf("\nDigite o novo nome para o produto:");
-    scanf(" %s",lista->itens[indice].nome);
-    
-    printf("\nDigite a nova quantidade para o estoque:");
-    scanf("%d",&lista->itens[indice].quantidade_estoque);
+    lista->itens[indice].quantidade_estoque = produto->quantidade_estoque;
    
-    printf("\nDigite o novo preço para o produto:");
-    scanf("%f",&lista->itens[indice].preco);
+    lista->itens[indice].preco = produto->preco;
    
-
-    printf("\nO produto foi atualizado com sucesso!");
+    return 1;
     
 }
 
@@ -177,28 +168,15 @@ int encontrarProduto(t_lista *lista, int codigo)
         printf("\nA lista de produtos está vazia!\n");
     }
 }
-int encontrarCodigo(int codigo) {
-    FILE *arquivo = fopen("C:\\Users\\Projeto 6\\Documents\\Trabalho-estrutura-de-dados\\produtos.txt", "r");
-
-    if (arquivo == NULL) {
-        return -1;
+int encontrarCodigo(t_lista *lista, int codigo)
+{
+    for(int i=0; i < lista->n;i++)
+    {
+        if(lista->itens[i].codigo == codigo)
+        {
+            return i;
+        }   
     }
-
-    produto p;
-    int linha = 0;
-
-    while (fscanf(arquivo, "Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%f\n",
-                   p.nome, &p.codigo, &p.quantidade_estoque, &p.preco) != EOF) {
-        linha++;
-
-        if (p.codigo == codigo) {
-            fclose(arquivo); 
-            return linha; 
-        }
-    }
-
-    fclose(arquivo); 
-
     return -1;
 }
 
@@ -283,7 +261,7 @@ void produtosEstoqueBaixo(t_lista *lista,int quantidade)
     {
         if(lista->itens[i].quantidade_estoque < quantidade)
         {
-            printf("Nome:%sCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
+            printf("Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",lista->itens[i].nome,lista->itens[i].codigo,lista->itens[i].quantidade_estoque,lista->itens[i].preco);
         }
     }
     }
@@ -327,7 +305,42 @@ int salvarListaEmArquivo(t_lista *lista) {
             return 1;
     } 
 }
+int atualizarArquivo(t_lista *lista) {
+    FILE *arquivo = fopen("C:\\Users\\Projeto 6\\Documents\\Trabalho-estrutura-de-dados\\produtos.txt", "w");
 
+    if (arquivo == NULL) {
+        perror("Erro ao abrir o arquivo");
+        return 0;
+    }
+    else
+    {
+        for (int i = 0; i < lista->n; i++) {
+                fprintf(arquivo, "Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%.2f\n",
+                        lista->itens[i].nome, lista->itens[i].codigo, lista->itens[i].quantidade_estoque, lista->itens[i].preco);
+                fprintf(arquivo, "\n");
+            }
+
+            fclose(arquivo);
+            return 1;
+    } 
+}
+int carregarListaDeArquivo(t_lista *lista) {
+    FILE *arquivo = fopen("C:\\Users\\Projeto 6\\Documents\\Trabalho-estrutura-de-dados\\produtos.txt", "r");
+
+    if (arquivo == NULL) {
+        perror("Erro ao abrir o arquivo");
+        return 0;
+    }
+
+    produto p;
+    while (fscanf(arquivo, "Nome:%s\nCódigo do produto:%d\nQuantidade no estoque:%d\nPreço do produto:%f\n",
+                   p.nome, &p.codigo, &p.quantidade_estoque, &p.preco) != EOF) {
+        inserirProduto(lista, p); // Adicione os dados lidos à lista
+    }
+
+    fclose(arquivo);
+    return 1;
+}
 
 int submenu(t_lista *lista)
 {
@@ -371,6 +384,7 @@ int main(int argc, char const *argv[])
 {
     int op1,cod,indice;
     t_lista *lista = criarLista(100); 
+    carregarListaDeArquivo(lista);
     produto novoProduto;
     do
     {
@@ -404,7 +418,7 @@ int main(int argc, char const *argv[])
                 scanf("%f", &novoProduto.preco);
                 getchar();
                
-                if(encontrarCodigo(novoProduto.codigo) != -1)
+                if(encontrarCodigo(lista,novoProduto.codigo) != -1)
                 {
                     printf("\nNão é possível cadastrar o mesmo produto no sistema!");
                     break;
@@ -431,7 +445,16 @@ int main(int argc, char const *argv[])
             case 2:
                 printf("Digite o código do produto:");
                 scanf("%d",&cod);
-                removerProduto(lista,cod);
+                indice = removerProduto(lista,cod);
+                if(indice == 1)
+                {
+                    atualizarArquivo(lista);
+                    printf("\nO produto foi removido com sucesso!");
+                }
+                else
+                {
+                    printf("\nO produto não foi encontrado!");
+                }
                 break;
             case 3:
                 listarProdutos(lista);
@@ -449,8 +472,24 @@ int main(int argc, char const *argv[])
                 
                 if(indice != -1)
                 {
-                    atualizarProduto(lista,indice);
-                    break;
+                    printf("Digite o nome do produto: ");
+                    getchar();
+                    fgets(novoProduto.nome,50,stdin);
+                    novoProduto.nome[strcspn(novoProduto.nome, "\n")] = '\0';
+                    
+                    printf("Digite a quantidade em estoque: ");
+                    scanf("%d", &novoProduto.quantidade_estoque);
+                    getchar();
+                    
+                    printf("Digite o preço do produto: ");
+                    scanf("%f", &novoProduto.preco);
+                    getchar();
+                    if(atualizarProduto(lista,indice,&novoProduto) == 1)
+                    {
+                        printf("\nO produto foi atualizado com sucesso!");
+                        atualizarArquivo(lista);
+                        break;
+                    }
                 }
                 else
                 {
